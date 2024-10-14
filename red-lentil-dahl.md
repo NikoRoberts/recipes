@@ -20,13 +20,15 @@ This easy Red Lentil Dahl is a flavorful, 1-pot Indian curry made with red lenti
 - Juice of ½ lemon
 - 2 handfuls of fresh spinach
 - Salt and pepper to taste
+- 1.5 cups of basmati rice
 
 ## Instructions
 
 1. Heat oil in a pan and cook onions for 5 minutes. Add garlic, ginger, and chili, then cook for a few more minutes.
 2. Lightly grind the cumin, coriander, and mustard seeds. Add them to the pan with turmeric and garam masala, cooking for 1 minute.
 3. Stir in lentils, tomatoes, coconut milk, and broth. Simmer for 15-20 minutes until thick.
-4. Add spinach and lemon juice, stirring until spinach wilts. Serve warm.
+4. While the dahl is simmering rinse and cook your rice with 3 cups of water.
+5. Add spinach and lemon juice, stirring until spinach wilts. Serve warm.
 
 ## Notes
 - Freezable: Let it cool completely and freeze in portions for up to 3 months.
