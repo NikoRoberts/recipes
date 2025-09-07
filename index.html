@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="en" data-gh-owner="NikoRoberts" data-gh-repo="recipes" data-gh-path="">
+<head>
+  <meta charset="utf-8" />
+  <title>Recipes — Markdown Viewer</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    :root { --bg:#0b0d10; --panel:#12161c; --text:#e6edf3; --muted:#9fb0c0; --accent:#4fb3ff; }
+    *{box-sizing:border-box} body{margin:0;font:16px/1.5 system-ui,-apple-system,Segoe UI,Roboto,Helvetica Neue,Arial,Noto Sans;color:var(--text);background:#0d1117;display:grid;grid-template-columns:280px 1fr;min-height:100vh}
+    header{grid-column:1/-1;padding:12px 16px;background:rgba(18,22,28,.8);position:sticky;top:0;backdrop-filter:blur(6px);z-index:2;border-bottom:1px solid #1f2630}
+    header h1{margin:0;font-size:16px;font-weight:600;color:var(--muted)}
+    #sidebar{border-right:1px solid #1f2630;background:var(--panel);padding:8px;overflow:auto}
+    #files{list-style:none;margin:0;padding:0} #files li{margin:2px 0}
+    #files button{width:100%;text-align:left;padding:8px 10px;border:1px solid #1f2630;border-radius:8px;background:#0f141b;color:var(--text);cursor:pointer}
+    #files button:hover,#files button.active{border-color:var(--accent);background:#0e1a25}
+    #main{padding:16px;overflow:auto} #content{max-width:900px;margin:0 auto}
+    #meta{margin:6px 0 14px;color:var(--muted);font-size:13px}
+    .hidden{display:none}
+    #content pre{background:#0b1220;padding:12px;border-radius:8px;overflow:auto;border:1px solid #1f2630}
+    #content code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,Liberation Mono,monospace}
+    #content a{color:var(--accent)}
+    #toolbar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:8px 0 14px}
+    #toolbar button{border:1px solid #1f2630;background:#0f141b;color:var(--text);border-radius:999px;padding:6px 10px;cursor:pointer}
+    #toolbar button.active{border-color:var(--accent);background:#0e1a25}
+    @media (max-width:880px){body{grid-template-columns:1fr} #sidebar{position:sticky;top:48px;z-index:1}}
+  </style>
+  <script defer src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/dompurify@3.1.7/dist/purify.min.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/styles/github-dark.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/lib/common.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/nosleep.js@0.12.0/dist/NoSleep.min.js"></script>
+</head>
+<body>
+  <header><h1>Recipes — Same-Folder Markdown</h1></header>
+  <aside id="sidebar">
+    <div id="meta">Loading file list…</div>
+    <ul id="files"></ul>
+  </aside>
+  <main id="main">
+    <div id="toolbar">
+      <button id="toggle-wake">Keep Screen Awake</button>
+      <button id="raw-btn" class="hidden">Open Raw</button>
+      <span id="status" style="color:#9fb0c0;font-size:13px;"></span>
+    </div>
+    <article id="content">Select a markdown file from the left.</article>
+  </main>
+
+  <script>
+    function parseGitHubPagesLocation() {
+      const host = location.hostname;
+      const pathParts = location.pathname.replace(/^\/+/, '').split('/');
+      let owner=null, repo=null, path='';
+      const m = host.match(/^(.+)\.github\.io$/i);
+      if (m) { owner = m[1]; repo = pathParts[0]||''; path = pathParts.slice(1).join('/'); }
+      else { repo = pathParts[0]||''; path = pathParts.slice(1).join('/'); }
+      if (path && /\.[A-Za-z0-9]+$/.test(path.split('/').pop())) path = path.split('/').slice(0,-1).join('/');
+      return { owner, repo, path };
+    }
+    function getOwnerRepoPath() {
+      const html = document.documentElement;
+      const overrideOwner = html.dataset.ghOwner || null;
+      const overrideRepo  = html.dataset.ghRepo  || null;
+      const overridePath  = html.dataset.ghPath  || null;
+      const inferred = parseGitHubPagesLocation();
+      return {
+        owner: overrideOwner || inferred.owner,
+        repo:  overrideRepo  || inferred.repo,
+        path:  overridePath  || inferred.path
+      };
+    }
+    const mdExtensions = ['.md','.markdown','.mdown','.mkd','.mkdn'];
+    const isMarkdown = (n)=>mdExtensions.some(ext=>n.toLowerCase().endsWith(ext));
+
+    // Wake Lock + NoSleep fallback
+    let wakeLock=null, wakeEnabled=false, noSleep=null;
+    async function requestWakeLock(){
+      const status = document.getElementById('status');
+      try {
+        if ('wakeLock' in navigator) {
+          wakeLock = await navigator.wakeLock.request('screen');
+          wakeEnabled = true; status.textContent='Screen wake lock active.';
+          wakeLock.addEventListener('release',()=>{ wakeEnabled=false; status.textContent='Wake lock released.'; });
+        } else {
+          if (!noSleep) noSleep = new NoSleep();
+          noSleep.enable(); wakeEnabled = true; status.textContent='Wake lock (fallback) enabled.';
+        }
+      } catch(e){ status.textContent='Wake lock unavailable: '+e.message; }
+    }
+    function releaseWakeLock(){
+      const status = document.getElementById('status');
+      if (wakeLock) { wakeLock.release(); wakeLock=null; }
+      if (noSleep) { try{ noSleep.disable(); }catch{} }
+      wakeEnabled=false; status.textContent='Wake lock disabled.';
+    }
+    document.getElementById('toggle-wake').addEventListener('click', async ()=> {
+      if (!wakeEnabled) { await requestWakeLock(); document.getElementById('toggle-wake').classList.add('active'); }
+      else { releaseWakeLock(); document.getElementById('toggle-wake').classList.remove('active'); }
+    });
+    document.addEventListener('visibilitychange', async ()=> {
+      if (document.visibilityState==='visible' && wakeEnabled && 'wakeLock' in navigator) {
+        try { wakeLock = await navigator.wakeLock.request('screen'); } catch {}
+      }
+    });
+
+    // marked + highlight.js
+    window.addEventListener('DOMContentLoaded', ()=> {
+      if (window.hljs) {
+        marked.setOptions({
+          highlight: (code, lang) => {
+            try {
+              if (lang && hljs.getLanguage(lang)) return hljs.highlight(code,{language:lang}).value;
+              return hljs.highlightAuto(code).value;
+            } catch { return code; }
+          }
+        });
+      }
+    });
+    const renderMarkdown = (md)=> DOMPurify.sanitize(marked.parse(md), {USE_PROFILES:{html:true, svg:true}});
+
+    async function fetchDirectory(){
+      const {owner, repo, path} = getOwnerRepoPath();
+      const meta = document.getElementById('meta');
+      const filesList = document.getElementById('files');
+      if (!owner || !repo) { meta.textContent='Could not infer owner/repo.'; return []; }
+
+      const api = `https://api.github.com/repos/${owner}/${repo}/contents/${encodeURIComponent(path)}`;
+      meta.textContent = `Listing: ${owner}/${repo}/${path || ''}`;
+      try {
+        const res = await fetch(api, { headers: {'Accept':'application/vnd.github+json'} });
+        if (!res.ok) throw new Error(`GitHub API ${res.status}`);
+        const items = await res.json();
+        const files = (Array.isArray(items)?items:[]).filter(it => it.type==='file' && isMarkdown(it.name));
+        files.sort((a,b)=>a.name.localeCompare(b.name, undefined, {sensitivity:'base'}));
+        filesList.innerHTML='';
+        if (!files.length) filesList.innerHTML='<li>No Markdown files in this folder.</li>';
+        else {
+          for (const f of files) {
+            const li=document.createElement('li');
+            const btn=document.createElement('button');
+            btn.textContent=f.name;
+            btn.dataset.downloadUrl=f.download_url;
+            btn.dataset.path=f.path;
+            btn.addEventListener('click', ()=> loadFile(f.name, f.download_url, btn));
+            li.appendChild(btn); filesList.appendChild(li);
+          }
+        }
+        return files;
+      } catch(e){ meta.textContent='Error: '+e.message+' — ensure the repo is public.'; return []; }
+    }
+
+    async function loadFile(name, url, btn){
+      const contentEl = document.getElementById('content');
+      const rawBtn = document.getElementById('raw-btn');
+      document.querySelectorAll('#files button').forEach(b=>b.classList.remove('active'));
+      if (btn) btn.classList.add('active');
+      contentEl.innerHTML = `<p style="color:#9fb0c0">Loading <code>${name}</code>…</p>`;
+      try {
+        const res = await fetch(url, { cache:'no-store' });
+        if (!res.ok) throw new Error(`Fetch ${res.status}`);
+        const md = await res.text();
+        contentEl.innerHTML = renderMarkdown(md);
+        rawBtn.classList.remove('hidden'); rawBtn.onclick = ()=> window.open(url, '_blank','noopener');
+        const params = new URLSearchParams(location.search); params.set('file', name);
+        history.replaceState(null, '', `${location.pathname}?${params.toString()}`);
+      } catch(e){ contentEl.innerHTML = `<p style="color:#ff9aa2">Failed to load file: ${e.message}</p>`; }
+    }
+
+    (async function init(){
+      const files = await fetchDirectory();
+      const qp = new URLSearchParams(location.search); const wanted = qp.get('file');
+      if (wanted && files.length) {
+        const match = files.find(f=>f.name===wanted);
+        if (match) { const btn=[...document.querySelectorAll('#files button')].find(b=>b.textContent===wanted); loadFile(match.name, match.download_url, btn); return; }
+      }
+      if
