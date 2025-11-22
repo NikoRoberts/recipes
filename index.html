@@ -1,64 +1,90 @@
 <!doctype html>
-<html lang="en" data-gh-owner="NikoRoberts" data-gh-repo="recipes" data-gh-path="">
+<html lang="en" data-gh-owner="NikoRoberts" data-gh-repo="recipes" data-gh-path="" class="dark">
 <head>
   <meta charset="utf-8" />
   <title>Recipes — Markdown Viewer</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <style>
-    :root { --bg:#0b0d10; --panel:#12161c; --text:#e6edf3; --muted:#9fb0c0; --accent:#4fb3ff; }
-    *{box-sizing:border-box}
-    body{margin:0;font:16px/1.5 system-ui,-apple-system,Segoe UI,Roboto,Helvetica Neue,Arial,Noto Sans;color:var(--text);background:#0d1117;display:grid;grid-template-columns:280px 1fr;min-height:100vh}
-    header{grid-column:1/-1;padding:12px 16px;background:rgba(18,22,28,.8);position:sticky;top:0;backdrop-filter:blur(6px);z-index:11;border-bottom:1px solid #1f2630;display:flex;align-items:center;gap:12px}
-    header h1{margin:0;font-size:16px;font-weight:600;color:var(--muted)}
-    #sidebar{border-right:1px solid #1f2630;background:var(--panel);padding:8px;overflow:auto}
-    #files{list-style:none;margin:0;padding:0} #files li{margin:2px 0}
-    #files button{width:100%;text-align:left;padding:8px 10px;border:1px solid #1f2630;border-radius:8px;background:#0f141b;color:var(--text);cursor:pointer}
-    #files button:hover,#files button.active{border-color:var(--accent);background:#0e1a25}
-    #main{padding:16px;overflow:auto}
-    #content{max-width:900px;margin:0 auto}
-    #meta{margin:6px 0 14px;color:var(--muted);font-size:13px}
-    .hidden{display:none}
-    #content pre{background:#0b1220;padding:12px;border-radius:8px;overflow:auto;border:1px solid #1f2630}
-    #content code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,Liberation Mono,monospace}
-    #content a{color:var(--accent)}
-    #toolbar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:8px 0 14px}
-    #toolbar button{border:1px solid #1f2630;background:#0f141b;color:var(--text);border-radius:999px;padding:6px 10px;cursor:pointer}
-    #toolbar button.active{border-color:var(--accent);background:#0e1a25}
-    #err{color:#ff9aa2;margin:8px 0 0;font-size:13px}
-    #menu-toggle{display:none;background:none;border:none;color:var(--text);cursor:pointer;padding:8px;font-size:24px}
-    #sidebar-overlay{display:none;position:fixed;top:49px;left:0;right:0;bottom:0;background:rgba(0,0,0,0.5);z-index:9;opacity:0;transition:opacity 0.3s ease}
-    #sidebar-overlay.visible{display:block;opacity:1}
-    @media (max-width:880px){
-      body{grid-template-columns:1fr}
-      #menu-toggle{display:block}
-      #sidebar{position:fixed;top:49px;left:0;bottom:0;width:280px;transform:translateX(-100%);transition:transform 0.3s ease;z-index:10}
-      #sidebar.open{transform:translateX(0)}
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            primary: {
+              DEFAULT: '#3b82f6',
+              dark: '#2563eb'
+            }
+          }
+        }
+      }
     }
+  </script>
+  <style>
+    /* Custom transitions for sidebar */
+    #sidebar {
+      transition: transform 0.3s ease;
+    }
+    #sidebar-overlay {
+      transition: opacity 0.3s ease;
+    }
+    /* Markdown content styling */
+    #content h1 { @apply text-3xl font-bold mt-6 mb-4; }
+    #content h2 { @apply text-2xl font-bold mt-5 mb-3; }
+    #content h3 { @apply text-xl font-semibold mt-4 mb-2; }
+    #content p { @apply mb-4; }
+    #content ul, #content ol { @apply mb-4 ml-6; }
+    #content ul { @apply list-disc; }
+    #content ol { @apply list-decimal; }
+    #content li { @apply mb-2; }
+    #content a { @apply text-blue-500 hover:text-blue-600 dark:text-blue-400 dark:hover:text-blue-300 underline; }
+    #content code { @apply font-mono text-sm bg-gray-100 dark:bg-gray-800 px-1 py-0.5 rounded; }
+    #content pre { @apply bg-gray-50 dark:bg-gray-900 p-4 rounded-lg overflow-auto border border-gray-200 dark:border-gray-700 mb-4; }
+    #content pre code { @apply bg-transparent p-0; }
+    #content blockquote { @apply border-l-4 border-gray-300 dark:border-gray-600 pl-4 italic my-4; }
+    #content table { @apply w-full mb-4 border-collapse; }
+    #content th, #content td { @apply border border-gray-300 dark:border-gray-700 px-4 py-2; }
+    #content th { @apply bg-gray-100 dark:bg-gray-800 font-semibold; }
   </style>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/styles/github-dark.min.css" media="(prefers-color-scheme: dark)">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/styles/github.min.css" media="(prefers-color-scheme: light)">
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/dompurify@3.1.7/dist/purify.min.js"></script>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/styles/github-dark.min.css">
   <script src="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/lib/common.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/nosleep.js@0.12.0/dist/NoSleep.min.js"></script>
 </head>
-<body>
-  <header>
-    <button id="menu-toggle" aria-label="Toggle menu">☰</button>
-    <h1>Recipes — Same-Folder Markdown</h1>
+<body class="bg-white dark:bg-gray-950 text-gray-900 dark:text-gray-100 min-h-screen grid grid-cols-[280px_1fr] max-md:grid-cols-1">
+  <header class="col-span-full sticky top-0 z-20 bg-white/80 dark:bg-gray-900/80 backdrop-blur-md border-b border-gray-200 dark:border-gray-800 px-4 py-3 flex items-center gap-3">
+    <button id="menu-toggle" class="md:hidden text-2xl p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition" aria-label="Toggle menu">
+      ☰
+    </button>
+    <h1 class="text-lg font-semibold text-gray-600 dark:text-gray-400">🍳 Recipes</h1>
   </header>
-  <div id="sidebar-overlay"></div>
-  <aside id="sidebar">
-    <div id="meta">Loading file list…</div>
-    <div id="err" class="hidden"></div>
-    <ul id="files"></ul>
+
+  <div id="sidebar-overlay" class="fixed inset-0 top-[57px] bg-black/50 z-10 hidden opacity-0"></div>
+
+  <aside id="sidebar" class="border-r border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-900 p-3 overflow-auto max-md:fixed max-md:top-[57px] max-md:left-0 max-md:bottom-0 max-md:w-72 max-md:-translate-x-full max-md:z-10">
+    <div id="meta" class="text-xs text-gray-500 dark:text-gray-400 mb-3 px-2">Loading file list…</div>
+    <div id="err" class="text-red-500 text-sm mt-2 px-2 hidden"></div>
+    <ul id="files" class="space-y-1"></ul>
   </aside>
-  <main id="main">
-    <div id="toolbar">
-      <button id="toggle-wake">Keep Screen Awake</button>
-      <button id="raw-btn" class="hidden">Open Raw</button>
-      <span id="status" style="color:#9fb0c0;font-size:13px;"></span>
+
+  <main class="p-4 overflow-auto">
+    <div class="max-w-4xl mx-auto">
+      <div id="toolbar" class="flex gap-2 flex-wrap items-center mb-4">
+        <button id="toggle-wake" class="px-4 py-2 rounded-full border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 transition text-sm font-medium">
+          Keep Screen Awake
+        </button>
+        <button id="dark-mode-toggle" class="px-4 py-2 rounded-full border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 transition text-sm font-medium">
+          <span class="dark:hidden">🌙 Dark</span>
+          <span class="hidden dark:inline">☀️ Light</span>
+        </button>
+        <span id="status" class="text-xs text-gray-500 dark:text-gray-400"></span>
+      </div>
+      <article id="content" class="prose dark:prose-invert max-w-none">
+        <p class="text-gray-500 dark:text-gray-400">Select a markdown file from the sidebar.</p>
+      </article>
     </div>
-    <article id="content">Select a markdown file from the left.</article>
   </main>
 
   <script>
@@ -87,6 +113,23 @@
     const mdExtensions = ['.md','.markdown','.mdown','.mkd','.mkdn'];
     const isMarkdown = (n)=>mdExtensions.some(ext=>n.toLowerCase().endsWith(ext));
 
+    // Dark mode toggle
+    const darkModeToggle = document.getElementById('dark-mode-toggle');
+    const htmlEl = document.documentElement;
+
+    // Initialize from localStorage or system preference
+    if (!localStorage.getItem('theme')) {
+      localStorage.setItem('theme', 'dark');
+    }
+    if (localStorage.getItem('theme') === 'light') {
+      htmlEl.classList.remove('dark');
+    }
+
+    darkModeToggle.addEventListener('click', () => {
+      htmlEl.classList.toggle('dark');
+      localStorage.setItem('theme', htmlEl.classList.contains('dark') ? 'dark' : 'light');
+    });
+
     // Wake Lock + NoSleep fallback
     let wakeLock=null, wakeEnabled=false, noSleep=null;
     async function requestWakeLock(){
@@ -108,9 +151,14 @@
       if (noSleep) { try{ noSleep.disable(); }catch{} }
       wakeEnabled=false; status.textContent='Wake lock disabled.';
     }
-    document.getElementById('toggle-wake').addEventListener('click', async ()=> {
-      if (!wakeEnabled) { await requestWakeLock(); document.getElementById('toggle-wake').classList.add('active'); }
-      else { releaseWakeLock(); document.getElementById('toggle-wake').classList.remove('active'); }
+    document.getElementById('toggle-wake').addEventListener('click', async function() {
+      if (!wakeEnabled) {
+        await requestWakeLock();
+        this.classList.add('ring-2', 'ring-blue-500', 'bg-blue-50', 'dark:bg-blue-950');
+      } else {
+        releaseWakeLock();
+        this.classList.remove('ring-2', 'ring-blue-500', 'bg-blue-50', 'dark:bg-blue-950');
+      }
     });
     document.addEventListener('visibilitychange', async ()=> {
       if (document.visibilityState==='visible' && wakeEnabled && 'wakeLock' in navigator) {
@@ -124,13 +172,24 @@
     const sidebarOverlay = document.getElementById('sidebar-overlay');
 
     function toggleSidebar() {
-      sidebar.classList.toggle('open');
-      sidebarOverlay.classList.toggle('visible');
+      const isOpen = sidebar.classList.toggle('translate-x-0');
+      if (!isOpen) sidebar.classList.add('-translate-x-full');
+      else sidebar.classList.remove('-translate-x-full');
+
+      if (isOpen) {
+        sidebarOverlay.classList.remove('hidden');
+        setTimeout(() => sidebarOverlay.classList.add('opacity-100'), 10);
+      } else {
+        sidebarOverlay.classList.remove('opacity-100');
+        setTimeout(() => sidebarOverlay.classList.add('hidden'), 300);
+      }
     }
 
     function closeSidebar() {
-      sidebar.classList.remove('open');
-      sidebarOverlay.classList.remove('visible');
+      sidebar.classList.add('-translate-x-full');
+      sidebar.classList.remove('translate-x-0');
+      sidebarOverlay.classList.remove('opacity-100');
+      setTimeout(() => sidebarOverlay.classList.add('hidden'), 300);
     }
 
     menuToggle.addEventListener('click', toggleSidebar);
@@ -138,7 +197,7 @@
 
     // Close sidebar when selecting a file on mobile
     document.addEventListener('click', (e)=> {
-      if (e.target.matches('#files button') && window.innerWidth <= 880) {
+      if (e.target.matches('#files button') && window.innerWidth < 768) {
         closeSidebar();
       }
     });
@@ -163,12 +222,12 @@
 
     const renderMarkdown = (md)=> {
       if (!window.marked || !window.DOMPurify) {
-        return '<p style="color:#ff9aa2">Error: Markdown libraries not loaded</p>';
+        return '<p class="text-red-500">Error: Markdown libraries not loaded</p>';
       }
       try {
         return DOMPurify.sanitize(marked.parse(md), {USE_PROFILES:{html:true, svg:true}});
       } catch(e) {
-        return `<p style="color:#ff9aa2">Error rendering markdown: ${e.message}</p>`;
+        return `<p class="text-red-500">Error rendering markdown: ${e.message}</p>`;
       }
     };
 
@@ -185,11 +244,10 @@
 
       if (!owner || !repo) { meta.textContent='Could not infer owner/repo.'; return []; }
 
-      // IMPORTANT: avoid trailing slash when path is root
       const base = `https://api.github.com/repos/${owner}/${repo}/contents`;
       const api  = path ? `${base}/${encodeURIComponent(path)}` : base;
 
-      meta.textContent = `Listing: ${owner}/${repo}/${path || ''}`;
+      meta.textContent = `📂 ${owner}/${repo}${path ? '/'+path : ''}`;
       try {
         const res = await fetch(api, { headers: {'Accept':'application/vnd.github+json'} });
         if (!res.ok) throw new Error(`GitHub API ${res.status}`);
@@ -197,12 +255,14 @@
         const files = (Array.isArray(items)?items:[]).filter(it => it.type==='file' && isMarkdown(it.name));
         files.sort((a,b)=>a.name.localeCompare(b.name, undefined, {sensitivity:'base'}));
         filesList.innerHTML='';
-        if (!files.length) filesList.innerHTML='<li>No Markdown files in this folder.</li>';
-        else {
+        if (!files.length) {
+          filesList.innerHTML='<li class="text-gray-500 dark:text-gray-400 text-sm px-2">No Markdown files in this folder.</li>';
+        } else {
           for (const f of files) {
             const li=document.createElement('li');
             const btn=document.createElement('button');
-            btn.textContent=f.name;
+            btn.textContent=f.name.replace(/\.md$/, '');
+            btn.className='w-full text-left px-3 py-2.5 rounded-lg border border-transparent hover:border-gray-300 dark:hover:border-gray-700 hover:bg-white dark:hover:bg-gray-800 transition text-sm truncate';
             btn.dataset.downloadUrl=f.download_url;
             btn.dataset.path=f.path;
             btn.addEventListener('click', ()=> loadFile(f.name, f.download_url, btn));
@@ -219,25 +279,26 @@
 
     async function loadFile(name, url, btn){
       const contentEl = document.getElementById('content');
-      const rawBtn = document.getElementById('raw-btn');
-      document.querySelectorAll('#files button').forEach(b=>b.classList.remove('active'));
-      if (btn) btn.classList.add('active');
-      contentEl.innerHTML = `<p style="color:#9fb0c0">Loading <code>${name}</code>…</p>`;
+      document.querySelectorAll('#files button').forEach(b=>{
+        b.classList.remove('bg-blue-50', 'dark:bg-blue-950', 'border-blue-500', 'dark:border-blue-600', 'font-semibold');
+      });
+      if (btn) {
+        btn.classList.add('bg-blue-50', 'dark:bg-blue-950', 'border-blue-500', 'dark:border-blue-600', 'font-semibold');
+      }
+      contentEl.innerHTML = `<p class="text-gray-500 dark:text-gray-400">Loading <code>${name}</code>…</p>`;
       try {
         const res = await fetch(url, { cache:'no-store' });
         if (!res.ok) throw new Error(`Fetch ${res.status}`);
         const md = await res.text();
         contentEl.innerHTML = renderMarkdown(md);
-        rawBtn.classList.remove('hidden'); rawBtn.onclick = ()=> window.open(url, '_blank','noopener');
         const params = new URLSearchParams(location.search); params.set('file', name);
         history.replaceState(null, '', `${location.pathname}?${params.toString()}`);
       } catch(e){
-        contentEl.innerHTML = `<p style="color:#ff9aa2">Failed to load file: ${e.message}</p>`;
+        contentEl.innerHTML = `<p class="text-red-500">Failed to load file: ${e.message}</p>`;
       }
     }
 
     async function waitForLibraries() {
-      // Wait for libraries to be loaded
       return new Promise((resolve) => {
         if (window.marked && window.DOMPurify) {
           resolve();
@@ -256,7 +317,7 @@
       if (wanted && files.length) {
         const match = files.find(f=>f.name===wanted);
         if (match) {
-          const btn=[...document.querySelectorAll('#files button')].find(b=>b.textContent===wanted);
+          const btn=[...document.querySelectorAll('#files button')].find(b=>b.textContent===wanted.replace(/\.md$/, ''));
           loadFile(match.name, match.download_url, btn); return;
         }
       }
