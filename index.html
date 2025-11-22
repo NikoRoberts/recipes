@@ -8,7 +8,7 @@
     :root { --bg:#0b0d10; --panel:#12161c; --text:#e6edf3; --muted:#9fb0c0; --accent:#4fb3ff; }
     *{box-sizing:border-box}
     body{margin:0;font:16px/1.5 system-ui,-apple-system,Segoe UI,Roboto,Helvetica Neue,Arial,Noto Sans;color:var(--text);background:#0d1117;display:grid;grid-template-columns:280px 1fr;min-height:100vh}
-    header{grid-column:1/-1;padding:12px 16px;background:rgba(18,22,28,.8);position:sticky;top:0;backdrop-filter:blur(6px);z-index:2;border-bottom:1px solid #1f2630}
+    header{grid-column:1/-1;padding:12px 16px;background:rgba(18,22,28,.8);position:sticky;top:0;backdrop-filter:blur(6px);z-index:11;border-bottom:1px solid #1f2630;display:flex;align-items:center;gap:12px}
     header h1{margin:0;font-size:16px;font-weight:600;color:var(--muted)}
     #sidebar{border-right:1px solid #1f2630;background:var(--panel);padding:8px;overflow:auto}
     #files{list-style:none;margin:0;padding:0} #files li{margin:2px 0}
@@ -25,16 +25,28 @@
     #toolbar button{border:1px solid #1f2630;background:#0f141b;color:var(--text);border-radius:999px;padding:6px 10px;cursor:pointer}
     #toolbar button.active{border-color:var(--accent);background:#0e1a25}
     #err{color:#ff9aa2;margin:8px 0 0;font-size:13px}
-    @media (max-width:880px){body{grid-template-columns:1fr} #sidebar{position:sticky;top:48px;z-index:1}}
+    #menu-toggle{display:none;background:none;border:none;color:var(--text);cursor:pointer;padding:8px;font-size:24px}
+    #sidebar-overlay{display:none;position:fixed;top:49px;left:0;right:0;bottom:0;background:rgba(0,0,0,0.5);z-index:9;opacity:0;transition:opacity 0.3s ease}
+    #sidebar-overlay.visible{display:block;opacity:1}
+    @media (max-width:880px){
+      body{grid-template-columns:1fr}
+      #menu-toggle{display:block}
+      #sidebar{position:fixed;top:49px;left:0;bottom:0;width:280px;transform:translateX(-100%);transition:transform 0.3s ease;z-index:10}
+      #sidebar.open{transform:translateX(0)}
+    }
   </style>
-  <script defer src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-  <script defer src="https://cdn.jsdelivr.net/npm/dompurify@3.1.7/dist/purify.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/dompurify@3.1.7/dist/purify.min.js"></script>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/styles/github-dark.min.css">
-  <script defer src="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/lib/common.min.js"></script>
-  <script defer src="https://cdn.jsdelivr.net/npm/nosleep.js@0.12.0/dist/NoSleep.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/lib/common.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/nosleep.js@0.12.0/dist/NoSleep.min.js"></script>
 </head>
 <body>
-  <header><h1>Recipes — Same-Folder Markdown</h1></header>
+  <header>
+    <button id="menu-toggle" aria-label="Toggle menu">☰</button>
+    <h1>Recipes — Same-Folder Markdown</h1>
+  </header>
+  <div id="sidebar-overlay"></div>
   <aside id="sidebar">
     <div id="meta">Loading file list…</div>
     <div id="err" class="hidden"></div>
@@ -106,20 +118,59 @@
       }
     });
 
-    // marked + highlight.js
-    window.addEventListener('DOMContentLoaded', ()=> {
-      if (window.hljs) {
-        marked.setOptions({
-          highlight: (code, lang) => {
-            try {
-              if (lang && hljs.getLanguage(lang)) return hljs.highlight(code,{language:lang}).value;
-              return hljs.highlightAuto(code).value;
-            } catch { return code; }
-          }
-        });
+    // Mobile menu toggle
+    const menuToggle = document.getElementById('menu-toggle');
+    const sidebar = document.getElementById('sidebar');
+    const sidebarOverlay = document.getElementById('sidebar-overlay');
+
+    function toggleSidebar() {
+      sidebar.classList.toggle('open');
+      sidebarOverlay.classList.toggle('visible');
+    }
+
+    function closeSidebar() {
+      sidebar.classList.remove('open');
+      sidebarOverlay.classList.remove('visible');
+    }
+
+    menuToggle.addEventListener('click', toggleSidebar);
+    sidebarOverlay.addEventListener('click', closeSidebar);
+
+    // Close sidebar when selecting a file on mobile
+    document.addEventListener('click', (e)=> {
+      if (e.target.matches('#files button') && window.innerWidth <= 880) {
+        closeSidebar();
       }
     });
-    const renderMarkdown = (md)=> DOMPurify.sanitize(marked.parse(md), {USE_PROFILES:{html:true, svg:true}});
+
+    // marked + highlight.js - wait for libraries to load
+    let librariesReady = false;
+    window.addEventListener('load', ()=> {
+      if (window.marked && window.DOMPurify) {
+        librariesReady = true;
+        if (window.hljs) {
+          marked.setOptions({
+            highlight: (code, lang) => {
+              try {
+                if (lang && hljs.getLanguage(lang)) return hljs.highlight(code,{language:lang}).value;
+                return hljs.highlightAuto(code).value;
+              } catch { return code; }
+            }
+          });
+        }
+      }
+    });
+
+    const renderMarkdown = (md)=> {
+      if (!window.marked || !window.DOMPurify) {
+        return '<p style="color:#ff9aa2">Error: Markdown libraries not loaded</p>';
+      }
+      try {
+        return DOMPurify.sanitize(marked.parse(md), {USE_PROFILES:{html:true, svg:true}});
+      } catch(e) {
+        return `<p style="color:#ff9aa2">Error rendering markdown: ${e.message}</p>`;
+      }
+    };
 
     function setError(msg){
       const err = document.getElementById('err');
@@ -185,7 +236,21 @@
       }
     }
 
+    async function waitForLibraries() {
+      // Wait for libraries to be loaded
+      return new Promise((resolve) => {
+        if (window.marked && window.DOMPurify) {
+          resolve();
+        } else {
+          window.addEventListener('load', () => {
+            resolve();
+          });
+        }
+      });
+    }
+
     (async function init(){
+      await waitForLibraries();
       const files = await fetchDirectory();
       const qp = new URLSearchParams(location.search); const wanted = qp.get('file');
       if (wanted && files.length) {
