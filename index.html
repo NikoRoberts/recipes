@@ -29,22 +29,107 @@
       transition: opacity 0.3s ease;
     }
     /* Markdown content styling */
-    #content h1 { @apply text-3xl font-bold mt-6 mb-4; }
-    #content h2 { @apply text-2xl font-bold mt-5 mb-3; }
-    #content h3 { @apply text-xl font-semibold mt-4 mb-2; }
-    #content p { @apply mb-4; }
-    #content ul, #content ol { @apply mb-4 ml-6; }
-    #content ul { @apply list-disc; }
-    #content ol { @apply list-decimal; }
-    #content li { @apply mb-2; }
-    #content a { @apply text-blue-500 hover:text-blue-600 dark:text-blue-400 dark:hover:text-blue-300 underline; }
-    #content code { @apply font-mono text-sm bg-gray-100 dark:bg-gray-800 px-1 py-0.5 rounded; }
-    #content pre { @apply bg-gray-50 dark:bg-gray-900 p-4 rounded-lg overflow-auto border border-gray-200 dark:border-gray-700 mb-4; }
-    #content pre code { @apply bg-transparent p-0; }
-    #content blockquote { @apply border-l-4 border-gray-300 dark:border-gray-600 pl-4 italic my-4; }
-    #content table { @apply w-full mb-4 border-collapse; }
-    #content th, #content td { @apply border border-gray-300 dark:border-gray-700 px-4 py-2; }
-    #content th { @apply bg-gray-100 dark:bg-gray-800 font-semibold; }
+    #content h1 {
+      font-size: 1.875rem;
+      font-weight: 700;
+      margin-top: 1.5rem;
+      margin-bottom: 1rem;
+    }
+    #content h2 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-top: 1.25rem;
+      margin-bottom: 0.75rem;
+    }
+    #content h3 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin-top: 1rem;
+      margin-bottom: 0.5rem;
+    }
+    #content p {
+      margin-bottom: 1rem;
+    }
+    #content ul, #content ol {
+      margin-bottom: 1rem;
+      margin-left: 1.5rem;
+    }
+    #content ul {
+      list-style-type: disc;
+    }
+    #content ol {
+      list-style-type: decimal;
+    }
+    #content li {
+      margin-bottom: 0.5rem;
+    }
+    #content a {
+      color: #3b82f6;
+      text-decoration: underline;
+    }
+    #content a:hover {
+      color: #2563eb;
+    }
+    .dark #content a {
+      color: #60a5fa;
+    }
+    .dark #content a:hover {
+      color: #93c5fd;
+    }
+    #content code {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-size: 0.875rem;
+      background-color: #f3f4f6;
+      padding: 0.125rem 0.25rem;
+      border-radius: 0.25rem;
+    }
+    .dark #content code {
+      background-color: #1f2937;
+    }
+    #content pre {
+      background-color: #f9fafb;
+      padding: 1rem;
+      border-radius: 0.5rem;
+      overflow: auto;
+      border: 1px solid #e5e7eb;
+      margin-bottom: 1rem;
+    }
+    .dark #content pre {
+      background-color: #111827;
+      border-color: #374151;
+    }
+    #content pre code {
+      background-color: transparent;
+      padding: 0;
+    }
+    #content blockquote {
+      border-left: 4px solid #d1d5db;
+      padding-left: 1rem;
+      font-style: italic;
+      margin: 1rem 0;
+    }
+    .dark #content blockquote {
+      border-color: #4b5563;
+    }
+    #content table {
+      width: 100%;
+      margin-bottom: 1rem;
+      border-collapse: collapse;
+    }
+    #content th, #content td {
+      border: 1px solid #d1d5db;
+      padding: 0.5rem 1rem;
+    }
+    .dark #content th, .dark #content td {
+      border-color: #374151;
+    }
+    #content th {
+      background-color: #f3f4f6;
+      font-weight: 600;
+    }
+    .dark #content th {
+      background-color: #1f2937;
+    }
   </style>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/styles/github-dark.min.css" media="(prefers-color-scheme: dark)">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/styles/github.min.css" media="(prefers-color-scheme: light)">
