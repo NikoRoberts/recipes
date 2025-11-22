@@ -132,37 +132,62 @@
 
     // Wake Lock + NoSleep fallback
     let wakeLock=null, wakeEnabled=false, noSleep=null;
+
+    function updateWakeButton() {
+      const btn = document.getElementById('toggle-wake');
+      if (wakeEnabled) {
+        btn.classList.add('ring-2', 'ring-blue-500', 'bg-blue-50', 'dark:bg-blue-950');
+      } else {
+        btn.classList.remove('ring-2', 'ring-blue-500', 'bg-blue-50', 'dark:bg-blue-950');
+      }
+    }
+
     async function requestWakeLock(){
       const status = document.getElementById('status');
       try {
         if ('wakeLock' in navigator) {
           wakeLock = await navigator.wakeLock.request('screen');
-          wakeEnabled = true; status.textContent='Screen wake lock active.';
-          wakeLock.addEventListener('release',()=>{ wakeEnabled=false; status.textContent='Wake lock released.'; });
+          wakeEnabled = true;
+          status.textContent='Screen wake lock active.';
+          wakeLock.addEventListener('release',()=>{
+            wakeEnabled=false;
+            status.textContent='Wake lock released.';
+            updateWakeButton();
+          });
         } else {
           if (!noSleep) noSleep = new NoSleep();
-          noSleep.enable(); wakeEnabled = true; status.textContent='Wake lock (fallback) enabled.';
+          noSleep.enable();
+          wakeEnabled = true;
+          status.textContent='Wake lock (fallback) enabled.';
         }
-      } catch(e){ status.textContent='Wake lock unavailable: '+e.message; }
+        updateWakeButton();
+      } catch(e){
+        status.textContent='Wake lock unavailable: '+e.message;
+        wakeEnabled=false;
+        updateWakeButton();
+      }
     }
+
     function releaseWakeLock(){
       const status = document.getElementById('status');
       if (wakeLock) { wakeLock.release(); wakeLock=null; }
       if (noSleep) { try{ noSleep.disable(); }catch{} }
-      wakeEnabled=false; status.textContent='Wake lock disabled.';
+      wakeEnabled=false;
+      status.textContent='Wake lock disabled.';
+      updateWakeButton();
     }
+
     document.getElementById('toggle-wake').addEventListener('click', async function() {
       if (!wakeEnabled) {
         await requestWakeLock();
-        this.classList.add('ring-2', 'ring-blue-500', 'bg-blue-50', 'dark:bg-blue-950');
       } else {
         releaseWakeLock();
-        this.classList.remove('ring-2', 'ring-blue-500', 'bg-blue-50', 'dark:bg-blue-950');
       }
     });
+
     document.addEventListener('visibilitychange', async ()=> {
       if (document.visibilityState==='visible' && wakeEnabled && 'wakeLock' in navigator) {
-        try { wakeLock = await navigator.wakeLock.request('screen'); } catch {}
+        await requestWakeLock();
       }
     });
 
