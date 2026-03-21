@@ -1,4 +1,4 @@
-# 10-Minute Peanut Butter & Chilli Crisp Noodles
+# 10-Minute Peanut Butter & Chilli Crisp Noodles with Kale
 
 ## Ingredients (Serves 2)
 
@@ -15,6 +15,9 @@
 - 2 tbsp shallot, finely diced
 - 1 small red chilli, sliced
 
+### Greens
+- 1–2 cups kale, stems removed and finely sliced
+
 ### Extras
 - 2 tbsp toasted sesame seeds
 - 80 ml neutral oil (e.g. sunflower)
@@ -26,31 +29,39 @@
 
 ## Instructions
 
-1. **Prep the base**
-   - Add peanut butter, soy sauce, vinegar, chilli crisp, garlic, ginger, spring onion, shallot, sesame seeds, and chilli into a heatproof pan or bowl.
+1. **Prep everything**
+   - Finely slice kale (remove tough stems).
+   - Chop all aromatics and set aside.
 
-2. **Heat the oil**
-   - Heat the neutral oil until very hot (just starting to smoke).
+2. **Make the sauce base**
+   - In a large heatproof pan or bowl, combine:
+     peanut butter, soy sauce, vinegar, chilli crisp,
+     garlic, ginger, spring onion, shallot, sesame seeds, and chilli.
 
-3. **Bloom the aromatics**
-   - Carefully pour the hot oil over the ingredients.
-   - Immediately whisk/stir to combine into a smooth, fragrant sauce.
+3. **Heat the oil**
+   - Heat neutral oil until very hot (just starting to smoke).
 
-4. **Cook noodles**
+4. **Bloom the aromatics**
+   - Carefully pour the hot oil over the mixture.
+   - Stir/whisk immediately to create a glossy sauce.
+
+5. **Cook noodles + kale**
    - Cook noodles according to packet instructions.
-   - Reserve a small amount of noodle cooking water.
+   - In the last **1–2 minutes**, add the sliced kale to the boiling water.
+   - Reserve ~½ cup noodle cooking water before draining.
 
-5. **Combine**
-   - Add drained noodles into the sauce.
-   - Toss well, loosening with a splash of reserved noodle water if needed.
+6. **Combine**
+   - Add drained noodles and kale directly into the sauce.
+   - Toss well to coat, adding splashes of reserved noodle water to loosen and emulsify.
 
-6. **Finish & serve**
-   - Taste and adjust if needed (extra soy, chilli crisp, or vinegar).
-   - Garnish with more spring onion, chilli, and sesame seeds.
+7. **Finish & serve**
+   - Taste and adjust (more soy, chilli crisp, or vinegar if needed).
+   - Garnish with extra spring onion, chilli, and sesame seeds.
 
 ---
 
 ## Notes
-- Add protein (crispy tofu, chicken, or prawns) for a fuller meal.
-- Adjust chilli crisp for spice level.
-- Noodle water helps emulsify the sauce and make it glossy.
+- Kale should be tender but still slightly textured—not mushy.
+- Noodle water is key for a silky, restaurant-style sauce.
+- Add protein (tofu, chicken, shrimp) if you want to bulk it up.
+- A squeeze of lime at the end works beautifully with the peanut + kale combo.
