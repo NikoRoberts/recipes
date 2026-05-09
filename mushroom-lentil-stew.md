@@ -6,7 +6,7 @@
 - 2 yellow onions, diced
 - 2 cups sliced carrot
 - 2 cups sliced celery
-- 32 oz (900 g) baby bella mushrooms, halved
+- 900 g baby bella mushrooms, halved
 - 12 garlic cloves, thinly sliced
 - 4 tsp dried thyme
 - 2 tsp dried oregano
@@ -14,9 +14,9 @@
 - 4 tbsp flour
 - 1/2 cup balsamic vinegar
 - 4 tbsp soy sauce
-- 32 oz (900 g) baby yellow potatoes, halved
+- 900 g baby yellow potatoes, halved
 - 2 cups uncooked split red lentils
-- 2 cans (14.5 oz / 410 g each) tomato sauce
+- 2 cans tomato sauce (410 g each)
 - 6 cups vegetable broth
 - 4 bay leaves
 - Kosher salt
@@ -33,7 +33,7 @@
 3. Cook for **8 minutes**, stirring occasionally, until softened.
 
 ### 2. Add Mushrooms & Herbs
-1. Add **32 oz halved baby bella mushrooms**, **12 thinly sliced garlic cloves**, **4 tsp dried thyme**, **2 tsp dried oregano**, and **1 tsp dried sage**.
+1. Add **900 g halved baby bella mushrooms**, **12 thinly sliced garlic cloves**, **4 tsp dried thyme**, **2 tsp dried oregano**, and **1 tsp dried sage**.
 2. Add another couple pinches of **salt and black pepper**.
 3. Cook for **3–4 minutes**, stirring frequently, until mushrooms begin to soften.
 
@@ -44,7 +44,7 @@
 4. Stir well, scraping up anything stuck to the bottom of the pot.
 
 ### 4. Simmer the Stew
-1. Add **32 oz halved baby yellow potatoes**, **2 cups split red lentils**, **2 cans tomato sauce (14.5 oz each)**, **6 cups vegetable broth**, and **4 bay leaves**.
+1. Add **900 g halved baby yellow potatoes**, **2 cups split red lentils**, **2 cans tomato sauce (410 g each)**, **6 cups vegetable broth**, and **4 bay leaves**.
 2. Season generously with **salt and black pepper**.
 3. Bring to a simmer over medium-high heat, stirring occasionally so the lentils do not stick.
 
