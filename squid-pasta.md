@@ -1,37 +1,51 @@
 # Squid Ink Pasta with Shrimp & Cherry Tomatoes
 
-## Ingredients
-- 12 oz squid ink pasta  
-- Extra-virgin olive oil  
-- Shrimp (quantity as desired), peeled and deveined  
-- 6 garlic cloves, thinly sliced  
-- Tomato paste (optional, for richer flavor)  
-- Cherry tomatoes, halved  
-- White wine or dry vermouth  
-- Red pepper flakes (to taste)  
-- Lemon zest or juice (optional)  
-- Fresh basil or parsley, chopped (optional)  
+## Ingredients (Serves 4)
 
-## Instructions
+- 340 g squid ink pasta
+- 450 g shrimp, peeled and deveined
+- 1 tbsp extra virgin olive oil
+- 6 garlic cloves, thinly sliced
+- 2 tbsp tomato paste
+- 280 g cherry tomatoes, halved
+- 1/3 cup white wine or dry vermouth
+- 1/2 tsp red pepper flakes
+- Zest and juice of 2 lemons
+- 1/2 cup fresh basil, chopped
+- 4 tbsp butter
+- Kosher salt
+- Freshly ground black pepper
 
-1. **Cook the pasta**  
-   - Prepare the squid ink pasta according to package directions until al dente. Drain, reserving pasta water.
+---
 
-2. **Cook the shrimp**  
-   - In a pan, heat a splash of olive oil.  
-   - Add sliced garlic (and red pepper flakes, if using) and sauté briefly until fragrant.  
-   - Add the shrimp and cook until they turn opaque. Remove and set aside.
+## Method
 
-3. **Build the sauce**  
-   - In the same pan, add a bit more oil if needed.  
-   - Stir in the tomato paste (if using) and let it briefly toast.  
-   - Add halved cherry tomatoes and white wine.  
-   - Let simmer until the tomatoes soften and the sauce slightly reduces.
+### 1. Cook the Pasta
+1. Bring a large pot of heavily salted water to a boil.
+2. Add **340 g squid ink pasta** and cook until al dente according to package instructions.
+3. Reserve about **1 cup pasta water**, then drain the pasta.
 
-4. **Combine and finish**  
-   - Stir the cooked shrimp back into the sauce.  
-   - Toss in the drained pasta and combine well, adding a splash of reserved pasta water if needed to adjust consistency.  
-   - Finish with a squeeze of lemon and a sprinkle of fresh basil or parsley if desired.
+### 2. Cook the Shrimp
+1. Pat **450 g shrimp** dry and season lightly with **salt and black pepper**.
+2. Heat **1 tbsp olive oil** in a large skillet over medium-high heat.
+3. Add the shrimp and cook for **1–2 minutes per side** until just pink.
+4. Remove shrimp from the pan and set aside.
 
-5. **Serve**  
-   - Plate hot, garnished with extra herbs. Serve immediately for the best flavor and color contrast.
+### 3. Build the Sauce
+1. In the same skillet, add **6 thinly sliced garlic cloves** and cook for about **1 minute** until fragrant.
+2. Stir in **2 tbsp tomato paste** and cook for **1 minute**.
+3. Add **280 g halved cherry tomatoes** and cook for **3–4 minutes** until softened.
+4. Pour in **1/3 cup white wine** and simmer for **2 minutes**.
+5. Stir in **1/2 tsp red pepper flakes**, the **zest of 2 lemons**, and the **juice of 2 lemons**.
+
+### 4. Finish the Pasta
+1. Add the cooked squid ink pasta to the skillet.
+2. Add **4 tbsp butter** and toss until melted and glossy.
+3. Add the cooked shrimp and **1/2 cup chopped basil**.
+4. Toss everything together, adding a splash of reserved pasta water if needed to loosen the sauce.
+5. Taste and season with more **salt and black pepper** if needed.
+
+### 5. Serve
+1. Divide into bowls immediately.
+2. Top with extra basil, lemon zest, or black pepper if desired.
+3. Serve hot.
